@@ -7,66 +7,105 @@
 //
 
 #import "creatData.h"
+
+
 #define  K 3
 
 @interface creatData ()
-{
 
-    int arr[9][9];
-
-}
 @end
 
 @implementation creatData
 
--(void)initArr
+-(void)initArrWith:(NSInteger)index
 {
-    for (int i=0; i<3; i++) {
-        for (int j=0; j<3; j++) {
-            
-            arr[i][j]=10;
-            
-        }
-        
-    }
-
     
+//先创建一个二维数独，所有的数独均以这个为模板进行改变,下面的数独需要修改
+   
+    int seedArray[9][9]={
+        {9,7,8,3,1,2,6,4,5},
+        {3,1,2,6,4,5,9,7,8},
+        {6,4,5,9,7,8,3,1,2},
+        {7,8,9,1,2,3,4,5,6},
+        {1,2,3,4,5,6,7,8,9},
+        {4,5,6,7,8,9,1,2,3},
+        {8,9,7,2,3,1,5,6,4},
+        {2,3,1,5,6,4,8,9,7},
+        {5,6,4,8,9,7,2,3,1}
+    };
     
-    
-    
-    
-    
-}
-
--(void )achieveData
-{
-    [self initArr];
-//   先将第一行设置成不同的0-9数据
-    for (int i=0; i<8; ) {
-        int arc=arc4random()%9;
+//    生成的b一维数组是0-9的随机数
+    int b[9]={0};
+    for (int i=0; i<9; ) {
+        int arc=arc4random()%9+1;
         int j;
-        for (j=0; j<9; j++) {
-            if (arc==arr[0][j]) {
+        for (j=0; j<i+1; j++) {
+            if (arc==b[j]) {
                 break;
             }
         }
-        if (j==9) {
+        if (j==i+1) {
             
-            arr[0][i]=arc;
+            b[i]=arc;
             i++;
         }
     }
     
+//    此时得到的数组就是一个原始矩阵
+ 
     
-    NSLog(@"12323123123123123123");
+//    进行变换，由随机的一维数组进行变换
+    for (int i=0; i<9; i++) {
+        for (int j=0; j<9; j++) {
+            for (int k=0; k<9; k++) {
+                if (seedArray[i][j]==b[k]) {
+                    seedArray[i][j]=k+1;
+                    break;
+                }
+            }
 
+        }
+ 
+    }
+
+    
+//    此时得到的数组就是一次变化后的唯一解矩阵
+    
+    //再抠出index个元素，然后赋值为0
+    for (int i=0; i<index; ) {
+        int x=arc4random()%9;
+        int y=arc4random()%9;
+
+        if (seedArray[x][y]!=0) {
+            seedArray[x][y]=0;
+            i++;
+        }
+    }
+
+//    此时得到的数组就是被抠出index个元素后的矩阵，可以作为题目
+
+    
+//    再将c的数组转换为OC的数组
+    NSMutableArray  *arr=[NSMutableArray array];
+    
+    for (int i=0; i<9; i++) {
+        for (int j=0; j<9; j++) {
+            NSString *num=[NSString stringWithFormat:@"%d",seedArray[i][j]];
+            [arr addObject:num];
+        }
+    }
+    NSLog(@"");
+
+    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+    [defaults setObject:arr forKey:@"rawData"];
+    [defaults synchronize];
+    
+    
 }
 
-
-
-
+//该方法暂时没使用，已经修改为其他算法
 //用于判断在横坐标为x，纵坐标为y的位置为v的值的情况下，是否有重复的数
--(BOOL) testx:(int)x y:( int) y z:(int) v
+-(BOOL) testx:(int)x y:( int) y z:(int) v arr:(int**)arr
 {
     int _x = x / K * K;
     int _y = y / K * K;
@@ -98,7 +137,6 @@
 
 
 }
-
 
 
 

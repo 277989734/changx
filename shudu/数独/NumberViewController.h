@@ -10,4 +10,6 @@
 
 @interface NumberViewController : UIViewController
 
+@property(nonatomic,assign)NSInteger index;
+
 @end

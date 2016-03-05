@@ -7,12 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-
-#import <stdlib.h>
+#import <UIKit/UIKit.h>
 
 
 @interface creatData : NSObject
 
--(void )achieveData;
+-(void)initArrWith:(NSInteger)index;
 
 @end
